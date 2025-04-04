@@ -4,3 +4,7 @@ export const getApiRoute = (path: string) => {
 
   return baseUrl + path;
 };
+
+export type ErrorResponse = {
+  error: string
+}

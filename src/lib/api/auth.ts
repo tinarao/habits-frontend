@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { getApiRoute } from ".";
+import { User } from "@/types/types";
 
 const SESSION_COOKIE_NAME = "session";
 
@@ -28,6 +29,6 @@ export async function verify() {
     },
   });
 
-  const data = await response.json()
-  return data
+  const data: { user: User } = await response.json()
+  return data.user
 }
