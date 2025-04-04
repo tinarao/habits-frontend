@@ -22,10 +22,9 @@ export async function verify() {
   }
 
   const route = getApiRoute("/api/auth/me");
-  console.log("Route", route)
   const response = await fetch(route, {
     headers: {
-      // Cookie: `${sessionCookie.name}=${sessionCookie.value}`,
+      Cookie: `${sessionCookie.name}=${sessionCookie.value}`,
     },
   });
 

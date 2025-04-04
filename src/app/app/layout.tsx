@@ -1,0 +1,24 @@
+import { Button } from "@/components/ui/button"
+import { verify } from "@/lib/api/auth"
+import { tc } from "@/lib/tc"
+import { redirect } from "next/navigation"
+
+export default async function AppLayout({ children }: React.PropsWithChildren) {
+  const session = await tc(verify())
+  if (session.error) {
+    return redirect("/start")
+  }
+
+  return (
+    <div className="flex flex-col h-screen">
+      <header className="border-b py-2">
+        <div>
+          <Button>
+            Мои привычки
+          </Button>
+        </div>
+      </header>
+      {children}
+    </div>
+  )
+}
