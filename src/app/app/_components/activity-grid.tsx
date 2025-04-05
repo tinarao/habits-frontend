@@ -3,7 +3,7 @@
 import { Grid } from "@/lib/grid"
 import { cn } from "@/lib/utils"
 import { Habit } from "@/types/types"
-import { useMemo } from "react"
+import { memo, useMemo } from "react"
 
 type CICProps = {
   date: Date
@@ -15,21 +15,26 @@ type AGProps = {
   checkedDates: Date[]
 }
 
-function CheckInCell({ date, isCheckedIn }: CICProps) {
-  const title = Intl.DateTimeFormat('ru', {
-    dateStyle: "long"
-  }).format(date)
+const CheckInCell = memo(
+  function Cell({ date, isCheckedIn }: CICProps) {
+    const title = Intl.DateTimeFormat('ru', {
+      dateStyle: "long"
+    }).format(date)
 
-  return (
-    <div title={title} className={cn(
-      isCheckedIn ? "bg-green-500" : "bg-stone-300",
-      'size-3 transition-transform hover:scale-125 cursor-pointer'
-    )} />
-  )
-}
+    return (
+      <div title={title} className={cn(
+        isCheckedIn ? "bg-green-500" : "bg-stone-300",
+        'size-3 rounded-xs transition-transform hover:scale-125 cursor-pointer'
+      )} />
+    )
+  }
+)
+
+
 
 export function ActivityGrid({ habit, checkedDates }: AGProps) {
-  const grid = useMemo(() => Grid.init(new Date()), [habit])
+  const grid = useMemo(() => Grid.init(habit.createdAt), [habit])
+  console.log(checkedDates)
 
   const checkedDatesSet = useMemo(() => {
     return new Set(

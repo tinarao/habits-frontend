@@ -12,7 +12,7 @@ export default async function AppLayout({ children }: React.PropsWithChildren) {
   }
 
   return (
-    <div>
+    <div className="flex flex-col h-screen">
       <header className="border-b py-2">
         <div>
           <Button>
@@ -25,7 +25,9 @@ export default async function AppLayout({ children }: React.PropsWithChildren) {
           </CreateHabitDialog>
         </div>
       </header>
-      {children}
+      <main className="bg-stone-50 flex-1 py-4">
+        {children}
+      </main>
     </div>
   )
 }

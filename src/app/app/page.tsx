@@ -1,6 +1,7 @@
 import { getMyHabits } from "@/lib/api/habits"
 import { tc } from "@/lib/tc"
 import { redirect } from "next/navigation"
+import { HabitCard } from "./_components/habit-card"
 
 export default async function AppHomePage() {
   const { data: habits, error } = await tc(getMyHabits())
@@ -9,12 +10,10 @@ export default async function AppHomePage() {
     return redirect("/start")
   }
 
-  console.log(habits)
-
   return (
-    <div className="bg-red-200">
+    <div className="w-fit mx-auto space-y-2">
       {habits.map(h => (
-        <div key={h.id}>{h.name}</div>
+        <HabitCard key={h.id} habit={h} />
       ))}
     </div>
   )

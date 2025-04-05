@@ -12,10 +12,6 @@ type CreateDTO = {
 
 export async function getMyHabits() {
   const token = await getSessionToken()
-  if (!token) {
-    throw new Error("Unauthorized")
-  }
-
   const route = getApiRoute("/api/habits")
   const response = await fetch(route, {
     headers: {
@@ -29,10 +25,6 @@ export async function getMyHabits() {
 
 export async function createHabit(dto: CreateHabitDto) {
   const token = await getSessionToken()
-  if (!token) {
-    throw new Error("Unauthorized")
-  }
-
   const { data, error, success } = await createHabitSchema.safeParseAsync(dto)
   if (!success) {
     throw new Error(error.errors[0].message)
@@ -52,6 +44,42 @@ export async function createHabit(dto: CreateHabitDto) {
   if (!response.ok) {
     const err: ErrorResponse = resData;
     const message = err.error ?? "Не удалось добавить привычку."
+    throw new Error(message)
+  }
+}
+
+export async function deleteHabit(habit: Habit) {
+  const token = await getSessionToken()
+  const route = getApiRoute("/api/habits/" + habit.slug)
+  const response = await fetch(route, {
+    method: "DELETE",
+    headers: {
+      "Cookie": `${token.name}=${token.value}`
+    }
+  })
+
+  if (!response.ok) {
+    const resData = await response.json()
+    const err: ErrorResponse = resData;
+    const message = err.error ?? "Не удалось удалить привычку."
+    throw new Error(message)
+  }
+}
+
+export async function renameHabit(habit: Habit, newName: string) {
+  const token = await getSessionToken()
+  const route = getApiRoute("/api/habits/rename/" + habit.slug + "/" + newName)
+  const response = await fetch(route, {
+    method: "PATCH",
+    headers: {
+      "Cookie": `${token.name}=${token.value}`
+    }
+  })
+
+  if (!response.ok) {
+    const resData = await response.json()
+    const err: ErrorResponse = resData;
+    const message = err.error ?? "Не удалось переименовать привычку."
     throw new Error(message)
   }
 }

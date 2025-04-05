@@ -10,7 +10,7 @@ export async function getSessionToken() {
   const cookieStorage = await cookies();
   const token = cookieStorage.get(SESSION_COOKIE_NAME);
   if (!token) {
-    return null;
+    throw new Error("Unauthorized")
   }
 
   return token;
