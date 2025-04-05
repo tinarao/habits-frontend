@@ -6,7 +6,6 @@ import { HabitCard } from "./_components/habit-card"
 export default async function AppHomePage() {
   const { data: habits, error } = await tc(getMyHabits())
   if (error) {
-    console.warn(error)
     return redirect("/start")
   }
 

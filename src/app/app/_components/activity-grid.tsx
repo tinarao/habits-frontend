@@ -34,7 +34,6 @@ const CheckInCell = memo(
 
 export function ActivityGrid({ habit, checkedDates }: AGProps) {
   const grid = useMemo(() => Grid.init(habit.createdAt), [habit])
-  console.log(checkedDates)
 
   const checkedDatesSet = useMemo(() => {
     return new Set(

@@ -83,3 +83,41 @@ export async function renameHabit(habit: Habit, newName: string) {
     throw new Error(message)
   }
 }
+
+export async function togglePin(habit: Habit) {
+  const token = await getSessionToken()
+  const route = getApiRoute("/api/habits/pin/" + habit.slug)
+  const response = await fetch(route, {
+    method: "PATCH",
+    headers: {
+      "Cookie": `${token.name}=${token.value}`
+    }
+  })
+
+  if (!response.ok) {
+    const resData = await response.json()
+    const err: ErrorResponse = resData
+    const message = err.error ?? "Не удалось закрепить привычку."
+    throw new Error(message)
+  }
+}
+
+export async function getPinned() {
+  const token = await getSessionToken()
+  const route = getApiRoute("/api/habits/pin")
+  const response = await fetch(route, {
+    headers: {
+      "Cookie": `${token.name}=${token.value}`
+    }
+  })
+
+  const resData = await response.json()
+  if (!response.ok) {
+    const err: ErrorResponse = resData;
+    const message = err.error ?? "Не удалось получить закреплённые привычки."
+    throw new Error(message)
+  }
+
+  const { habits }: { habits: Habit[] } = resData;
+  return habits
+}

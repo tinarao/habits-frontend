@@ -11,7 +11,7 @@ export const Grid = {
       return cachedDays;
     }
 
-    cachedDays = Array.from({ length: 365 }, (_, i) => {
+    cachedDays = Array.from({ length: 364 }, (_, i) => {
       const date = new Date(fromDay);
       date.setDate(date.getDate() + i);
 

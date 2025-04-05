@@ -20,7 +20,9 @@ import {
   Cog,
   LoaderCircle,
   PenLine,
+  Pin,
   Save,
+  Star,
   Trash,
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -39,8 +41,9 @@ import { Input } from '@/components/ui/input';
 import { Habit } from '@/types/types';
 import { ActivityGrid } from './activity-grid';
 import { tc } from '@/lib/tc';
-import { deleteHabit, renameHabit } from '@/lib/api/habits';
+import { deleteHabit, renameHabit, togglePin } from '@/lib/api/habits';
 import { CheckInButton } from './checkin-button';
+import { cn } from '@/lib/utils';
 
 interface HabitCardProps {
   habit: Habit
@@ -79,48 +82,47 @@ export function HabitCard({ habit }: HabitCardProps) {
     });
   };
 
-  // const handlePinSwitch = async () => {
-  //   startTransition(async () => {
-  //     const result = await switchHabitPin(habit.id);
-  //     if (!result.ok) {
-  //       toast.error(result.message);
-  //       return;
-  //     }
-  //
-  //     toast.success(result.message);
-  //     router.refresh();
-  //   });
-  // };
+  const handlePinSwitch = async () => {
+    startTransition(async () => {
+      const result = await tc(togglePin(habit));
+      if (result.error) {
+        toast.error(result.error.message);
+        return;
+      }
+
+      router.refresh();
+    });
+  };
 
   return (
     <Card className="w-fit">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           {habit.name}
-          {/*   <Button */}
-          {/*     disabled={isLoading} */}
-          {/*     onClick={handlePinSwitch} */}
-          {/*     size="icon" */}
-          {/*     variant="ghost" */}
-          {/*     title={ */}
-          {/*       habit.isPinned */}
-          {/*         ? 'Данная привычка закреплена' */}
-          {/*         : 'Нажмите, чтобы закрепить привычку в планировщике' */}
-          {/*     } */}
-          {/*   > */}
-          {/*     {isLoading ? ( */}
-          {/*       <LoaderCircle className="size-4 animate-spin" /> */}
-          {/*     ) : ( */}
-          {/*       <Star */}
-          {/*         className={cn( */}
-          {/*           'size-4', */}
-          {/*           habit.isPinned */}
-          {/*             ? 'stroke-yellow-400 fill-yellow-400' */}
-          {/*             : 'stroke-stone-300 fill-stone-300' */}
-          {/*         )} */}
-          {/*       /> */}
-          {/*     )} */}
-          {/*   </Button> */}
+          <Button
+            disabled={isLoading}
+            onClick={handlePinSwitch}
+            size="icon"
+            variant="ghost"
+            title={
+              habit.isPinned
+                ? 'Данная привычка закреплена'
+                : 'Нажмите, чтобы закрепить привычку в планировщике'
+            }
+          >
+            {isLoading ? (
+              <LoaderCircle className="size-4 animate-spin" />
+            ) : (
+              <Star
+                className={cn(
+                  'size-4',
+                  habit.isPinned
+                    ? 'stroke-yellow-400 fill-yellow-400'
+                    : 'stroke-stone-300 fill-stone-300'
+                )}
+              />
+            )}
+          </Button>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -140,10 +142,10 @@ export function HabitCard({ habit }: HabitCardProps) {
             <DropdownMenuContent>
               <DropdownMenuLabel>{habit.name}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {/* <DropdownMenuItem disabled={isLoading} onClick={handlePinSwitch}> */}
-              {/*   <Pin className="size-4" /> */}
-              {/*   {habit.isPinned ? 'Открепить' : 'Закрепить'} */}
-              {/* </DropdownMenuItem> */}
+              <DropdownMenuItem disabled={isLoading} onClick={handlePinSwitch}>
+                <Pin className="size-4" />
+                {habit.isPinned ? 'Открепить' : 'Закрепить'}
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={handleRemoveHabit}>
                 <Trash className="size-4" />
                 Удалить
