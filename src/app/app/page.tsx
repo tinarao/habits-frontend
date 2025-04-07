@@ -4,12 +4,12 @@ import { redirect } from "next/navigation"
 import { HabitCard } from "./_components/habit-card"
 import TodayHabitsBlock from "./_components/today-habits-block"
 import { Button } from "@/components/ui/button"
-import { PlusIcon } from "lucide-react"
+import { List, PlusIcon } from "lucide-react"
 import CreateHabitDialog from "./_components/create-habit-dialog"
+import Link from "next/link"
 
 export default async function AppHomePage() {
   const habitsResult = await tc(getMyHabits())
-
   if (habitsResult.error) {
     redirect("/start")
   }
@@ -29,6 +29,13 @@ export default async function AppHomePage() {
           {habitsResult.data.slice(0, 3).map(h => (
             <HabitCard habit={h} key={h.id} />
           ))}
+          <div className="flex items-center justify-center w-full py-2">
+            <Button asChild>
+              <Link href="/app/habits">
+                <List /> Посмотреть все
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
       <TodayHabitsBlock />

@@ -1,10 +1,8 @@
 import { getMyHabits } from "@/lib/api/habits"
 import { tc } from "@/lib/tc"
 import { redirect } from "next/navigation"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowRight, CheckSquare, Clock } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
+import { HabitCard } from "../_components/habit-card"
+import Breadcrumbs from "../_components/breadcrumbs"
 
 export default async function HabitsPage() {
   const { data: habits, error } = await tc(getMyHabits())
@@ -13,34 +11,13 @@ export default async function HabitsPage() {
   }
 
   return (
-    <div className="grid grid-cols-4 container mx-auto gap-3">
-      {habits.map(h => {
-        const formattedDate = Intl.DateTimeFormat("ru", {
-          dateStyle: "medium",
-          timeStyle: "medium"
-        }).format(new Date(h.createdAt))
-
-        return (
-          <Card key={h.id}>
-            <CardHeader>
-              <CardTitle>{h.name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="*:text-sm *:text-muted-foreground *:font-medium">
-                <p className="flex items-center gap-x-2"><Clock className="size-4" /> {formattedDate}</p>
-                <p className="flex items-center gap-x-2"><CheckSquare className="size-4" /> {h.checkIns.length}</p>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button size="sm" asChild>
-                <Link href={"/app/habits/" + h.slug}>
-                  <ArrowRight /> Перейти
-                </Link>
-              </Button>
-            </CardFooter>
-          </Card>
-        )
-      })}
+    <div className="container mx-auto">
+      <Breadcrumbs links={[{ label: "Привычки", url: "/app/habits" }]} />
+      <div className="w-fit mx-auto">
+        {habits.map(h => (
+          <HabitCard key={h.id} habit={h} />
+        ))}
+      </div>
     </div>
   )
 }

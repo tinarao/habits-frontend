@@ -46,6 +46,7 @@ import { tc } from '@/lib/tc';
 import { deleteHabit, renameHabit, togglePin } from '@/lib/api/habits';
 import { CheckInButton } from './checkin-button';
 import { cn, localizeDate } from '@/lib/utils';
+import Link from 'next/link';
 
 interface HabitCardProps {
   habit: Habit;
@@ -106,7 +107,9 @@ export function HabitCard({ habit }: HabitCardProps) {
     <Card className="w-fit">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          {habit.name}
+          <Link href={"/app/habits/" + habit.slug} className='hover:text-foreground/70 transition'>
+            {habit.name}
+          </Link>
           <div className='space-x-2'>
             <Button size="icon" variant="ghost">
               {habit.remind ? <BellRing /> : <Bell />}
