@@ -163,3 +163,27 @@ export async function getHabitsWithoutTodayCheckin() {
   const { habits }: { habits: Habit[] } = resData;
   return habits
 }
+
+export const getMostCheckedHabits = async () => {
+  const token = await getSessionToken()
+  const route = getApiRoute("/api/habits/most-checked")
+
+  const response = await fetch(route, {
+    headers: {
+      "Cookie": `${token.name}=${token.value}`
+    },
+    next: {
+      tags: ["checkins"],
+    }
+  })
+
+  const resData = await response.json()
+  if (!response.ok) {
+    const err: ErrorResponse = resData;
+    const message = err.error ?? "Не удалось получить привычки."
+    throw new Error(message)
+  }
+
+  const { habits }: { habits: Habit[] } = resData;
+  return habits
+}

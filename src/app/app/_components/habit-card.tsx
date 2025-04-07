@@ -59,7 +59,8 @@ export function HabitCard({ habit }: HabitCardProps) {
 
   const checkinnedDates = useMemo(
     () =>
-      habit.checkIns.map((c) => {
+      // extra non-null check cuz i don't want this shitfuck to crash the whole app
+      (habit.checkIns || []).map((c) => {
         return localizeDate(new Date(c.createdAt));
       }),
     [habit]
@@ -107,10 +108,13 @@ export function HabitCard({ habit }: HabitCardProps) {
     <Card className="w-fit">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <Link href={"/app/habits/" + habit.slug} className='hover:text-foreground/70 transition'>
+          <Link
+            href={'/app/habits/' + habit.slug}
+            className="hover:text-foreground/70 transition"
+          >
             {habit.name}
           </Link>
-          <div className='space-x-2'>
+          <div className="space-x-2">
             <Button size="icon" variant="ghost">
               {habit.remind ? <BellRing /> : <Bell />}
             </Button>
