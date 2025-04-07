@@ -46,7 +46,7 @@ import { CheckInButton } from './checkin-button';
 import { cn } from '@/lib/utils';
 
 interface HabitCardProps {
-  habit: Habit
+  habit: Habit;
 }
 
 export function HabitCard({ habit }: HabitCardProps) {
@@ -54,7 +54,14 @@ export function HabitCard({ habit }: HabitCardProps) {
   const [newName, setNewName] = useState(habit.name);
   const [isLoading, startTransition] = useTransition();
 
-  const checkinnedDates = useMemo(() => habit.checkIns.map((c) => new Date(c.createdAt)), [habit])
+  const checkinnedDates = useMemo(
+    () =>
+      habit.checkIns.map((c) => {
+        const date = new Date(c.createdAt);
+        return new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      }),
+    [habit]
+  );
 
   const handleRenameHabit = async () => {
     startTransition(async () => {
@@ -64,7 +71,7 @@ export function HabitCard({ habit }: HabitCardProps) {
         return;
       }
 
-      toast.success("Привычка переименована!");
+      toast.success('Привычка переименована!');
       router.refresh();
     });
   };
@@ -73,11 +80,11 @@ export function HabitCard({ habit }: HabitCardProps) {
     startTransition(async () => {
       const result = await tc(deleteHabit(habit));
       if (result.error) {
-        toast.error(result.error.message)
-        return
+        toast.error(result.error.message);
+        return;
       }
 
-      toast.success("Привычка переименована!")
+      toast.success('Привычка переименована!');
       router.refresh();
     });
   };
@@ -129,9 +136,7 @@ export function HabitCard({ habit }: HabitCardProps) {
         <ActivityGrid habit={habit} checkedDates={checkinnedDates} />
       </CardContent>
       <CardFooter className="flex items-center justify-between">
-        <CheckInButton habit={habit}>
-          Отметиться
-        </CheckInButton>
+        <CheckInButton habit={habit}>Отметиться</CheckInButton>
         <Dialog>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

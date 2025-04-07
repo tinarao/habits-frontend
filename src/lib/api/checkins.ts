@@ -43,3 +43,25 @@ export async function getCheckinsByHabit(habit: Habit) {
   const { checkins }: { checkins: CheckIn[] } = data;
   return checkins
 }
+
+export async function getLatestCheckins() {
+  const token = await getSessionToken()
+  const route = getApiRoute("/api/checkins/latest")
+  const response = await fetch(route, {
+    headers: {
+      "Cookie": `${token.name}=${token.value}`
+    }
+  })
+
+  const data = await response.json()
+  if (!response.ok) {
+    const err = data as ErrorResponse
+    const message = err.error ?? "Не удалось получить последние отметки"
+    throw new Error(message)
+  }
+
+  const { checkins }: { checkins: CheckIn[] } = data;
+  const latest = checkins.slice(0, 5)
+
+  return latest
+}

@@ -3,15 +3,9 @@ export type Day = {
   checkinsCount: number
 }
 
-let cachedDays: Day[] | null = null;
-
 export const Grid = {
   init: (fromDay: Date) => {
-    if (cachedDays) {
-      return cachedDays;
-    }
-
-    cachedDays = Array.from({ length: 364 }, (_, i) => {
+    const days = Array.from({ length: 364 }, (_, i) => {
       const date = new Date(fromDay);
       date.setDate(date.getDate() + i);
 
@@ -21,6 +15,6 @@ export const Grid = {
       };
     });
 
-    return cachedDays;
+    return days;
   }
 }

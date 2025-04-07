@@ -121,3 +121,23 @@ export async function getPinned() {
   const { habits }: { habits: Habit[] } = resData;
   return habits
 }
+
+export async function getHabitDetails(slug: string) {
+  const token = await getSessionToken()
+  const route = getApiRoute("/api/habits/slug/" + slug)
+  const response = await fetch(route, {
+    headers: {
+      "Cookie": `${token.name}=${token.value}`
+    }
+  })
+
+  const resData = await response.json()
+  if (!response.ok) {
+    const err: ErrorResponse = resData;
+    const message = err.error ?? "Привычка не найдена"
+    throw new Error(message)
+  }
+
+  const { habit }: { habit: Habit } = resData;
+  return habit
+}

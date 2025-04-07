@@ -9,6 +9,15 @@ const nextConfig: NextConfig = {
       }
     ]
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'avatars.yandex.net',
+        pathname: '/get-yapic/**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

@@ -5,6 +5,8 @@ import { PlusIcon, Star } from "lucide-react"
 import { redirect } from "next/navigation"
 import CreateHabitDialog from "./_components/create-habit-dialog"
 import { Planner } from "./_components/planner"
+import Link from "next/link"
+import AccountDropdown from "./_components/account-dropdown"
 
 export default async function AppLayout({ children }: React.PropsWithChildren) {
   const session = await tc(verify())
@@ -14,20 +16,23 @@ export default async function AppLayout({ children }: React.PropsWithChildren) {
 
   return (
     <div className="flex flex-col h-screen">
-      <header className="container mx-auto p-2">
+      <header className="container mx-auto py-2">
         <div className="flex items-center justify-between bg-stone-100 rounded-md p-4">
-          <Button variant="link">
-            Мои привычки
+          <Button variant="link" asChild>
+            <Link href="/app">
+              Мои привычки
+            </Link>
           </Button>
-          <div className="flex items-center gap-x-4">
+          <div className="flex items-center gap-x-2">
             <Planner>
               <Star /> Планировщик
             </Planner>
             <CreateHabitDialog>
-              <Button>
+              <Button variant="outline" size="sm">
                 <PlusIcon /> Добавить
               </Button>
             </CreateHabitDialog>
+            <AccountDropdown />
           </div>
         </div>
       </header>
