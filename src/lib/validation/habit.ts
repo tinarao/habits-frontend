@@ -8,6 +8,7 @@ const validators = {
 export const createHabitSchema = z.object({
   name: validators.name,
   description: z.optional(validators.description),
+  remind: z.boolean().default(false),
 })
 
 // Types

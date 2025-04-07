@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import {
+  Bell,
+  BellRing,
   Cog,
   LoaderCircle,
   PenLine,
@@ -105,30 +107,35 @@ export function HabitCard({ habit }: HabitCardProps) {
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           {habit.name}
-          <Button
-            disabled={isLoading}
-            onClick={handlePinSwitch}
-            size="icon"
-            variant="ghost"
-            title={
-              habit.isPinned
-                ? 'Данная привычка закреплена'
-                : 'Нажмите, чтобы закрепить привычку в планировщике'
-            }
-          >
-            {isLoading ? (
-              <LoaderCircle className="size-4 animate-spin" />
-            ) : (
-              <Star
-                className={cn(
-                  'size-4',
-                  habit.isPinned
-                    ? 'stroke-yellow-400 fill-yellow-400'
-                    : 'stroke-stone-300 fill-stone-300'
-                )}
-              />
-            )}
-          </Button>
+          <div className='space-x-2'>
+            <Button size="icon" variant="ghost">
+              {habit.remind ? <BellRing /> : <Bell />}
+            </Button>
+            <Button
+              disabled={isLoading}
+              onClick={handlePinSwitch}
+              size="icon"
+              variant="ghost"
+              title={
+                habit.isPinned
+                  ? 'Данная привычка закреплена'
+                  : 'Нажмите, чтобы закрепить привычку в планировщике'
+              }
+            >
+              {isLoading ? (
+                <LoaderCircle className="size-4 animate-spin" />
+              ) : (
+                <Star
+                  className={cn(
+                    'size-4',
+                    habit.isPinned
+                      ? 'stroke-yellow-400 fill-yellow-400'
+                      : 'stroke-stone-300 fill-stone-300'
+                  )}
+                />
+              )}
+            </Button>
+          </div>
         </CardTitle>
       </CardHeader>
       <CardContent>

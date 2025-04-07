@@ -23,17 +23,21 @@ export default async function AppLayout({ children }: React.PropsWithChildren) {
             </Link>
           </Button>
           <div className="flex items-center gap-x-2">
-            <Planner>
-              <Button title="Нажмите, чтобы посмотреть на закреплённые привычки" size="icon" variant="outline">
-                <Star />
-              </Button>
-            </Planner>
-            <AccountDropdown />
+            {session && (
+              <Planner>
+                <Button title="Нажмите, чтобы посмотреть на закреплённые привычки" size="icon" variant="outline">
+                  <Star />
+                </Button>
+              </Planner>
+            )}
+            {session && (
+              <AccountDropdown />
+            )}
           </div>
         </div>
       </header>
       <main className="flex-1 py-4">
-        {children}
+        {session && children}
       </main>
     </div>
   )

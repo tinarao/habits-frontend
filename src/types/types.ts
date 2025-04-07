@@ -4,6 +4,7 @@ export type Habit = {
   id: number;
   name: string;
   slug: string;
+  remind: boolean;
   description: string | null;
   isPinned: boolean;
   checkIns: CheckIn[];

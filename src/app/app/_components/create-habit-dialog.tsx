@@ -12,14 +12,16 @@ import { createHabit } from '@/lib/api/habits';
 import { useRouter } from 'next/navigation';
 import { PropsWithChildren, useState, useTransition } from 'react';
 import { toast } from 'sonner';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { Label } from '../../../components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { tc } from '@/lib/tc';
+import { Switch } from '@/components/ui/switch';
 
 const CreateHabitDialog = ({ children }: PropsWithChildren) => {
   const router = useRouter();
   const [isLoading, startTransition] = useTransition();
+  const [remind, setRemind] = useState(false)
   const [newHabitName, setNewHabitName] = useState('');
   const [newHabitDescription, setNewHabitDescription] = useState('');
 
@@ -29,7 +31,8 @@ const CreateHabitDialog = ({ children }: PropsWithChildren) => {
         if (newHabitName.trim()) {
           const result = await tc(createHabit({
             name: newHabitName,
-            description: newHabitDescription
+            description: newHabitDescription,
+            remind
           }))
           if (result.error) {
             toast.error(result.error.message)
@@ -80,6 +83,10 @@ const CreateHabitDialog = ({ children }: PropsWithChildren) => {
               onChange={(e) => setNewHabitDescription(e.target.value)}
             />
           </div>
+        </div>
+        <div className='flex items-center gap-x-2'>
+          <Switch checked={remind} onCheckedChange={e => setRemind(e)} />
+          <Label>Напоминать</Label>
         </div>
         <Button disabled={isLoading} onClick={handleAddHabit}>
           Добавить
