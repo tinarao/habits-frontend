@@ -16,6 +16,11 @@ export async function getSessionToken() {
   return token;
 }
 
+export async function removeToken() {
+  const cookieStorage = await cookies();
+  cookieStorage.delete(SESSION_COOKIE_NAME);
+}
+
 export async function verify() {
   const sessionCookie = await getSessionToken();
   if (!sessionCookie) {
