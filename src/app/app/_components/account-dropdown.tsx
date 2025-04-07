@@ -1,6 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { verify } from "@/lib/api/auth";
 import { User } from "@/types/types";
@@ -19,16 +18,15 @@ export default function AccountDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="lg">
+        <button>
           {user ? (
             <>
-              <Image src={user.imageUrl!} alt="Ваша аватарка" width={25} height={25} className="rounded-md" />
-              {user?.name ?? user?.nickname ?? user?.email}
+              <Image src={user.imageUrl!} alt="Ваша аватарка" width={40} height={40} className="rounded-md" />
             </>
           ) : (
             <>Войти</>
           )}
-        </Button>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>

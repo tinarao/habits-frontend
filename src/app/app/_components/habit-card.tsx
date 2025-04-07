@@ -43,7 +43,7 @@ import { ActivityGrid } from './activity-grid';
 import { tc } from '@/lib/tc';
 import { deleteHabit, renameHabit, togglePin } from '@/lib/api/habits';
 import { CheckInButton } from './checkin-button';
-import { cn } from '@/lib/utils';
+import { cn, localizeDate } from '@/lib/utils';
 
 interface HabitCardProps {
   habit: Habit;
@@ -57,8 +57,7 @@ export function HabitCard({ habit }: HabitCardProps) {
   const checkinnedDates = useMemo(
     () =>
       habit.checkIns.map((c) => {
-        const date = new Date(c.createdAt);
-        return new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+        return localizeDate(new Date(c.createdAt));
       }),
     [habit]
   );

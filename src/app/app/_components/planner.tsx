@@ -14,9 +14,7 @@ export async function Planner({ children }: React.PropsWithChildren) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm">
-          {children}
-        </Button>
+        {children}
       </PopoverTrigger>
       <PopoverContent className="w-72">
         <div className="space-y-4">

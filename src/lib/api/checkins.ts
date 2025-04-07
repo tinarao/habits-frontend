@@ -3,6 +3,7 @@
 import { CheckIn, Habit } from "@/types/types"
 import { ErrorResponse, getApiRoute } from "."
 import { getSessionToken } from "./auth"
+import { revalidateTag } from "next/cache"
 
 export async function createCheckin(habit: Habit) {
   const token = await getSessionToken()
@@ -18,6 +19,7 @@ export async function createCheckin(habit: Habit) {
     }
   })
 
+  revalidateTag("checkins")
   const data = await response.json()
   if (!response.ok) {
     const err = data as ErrorResponse

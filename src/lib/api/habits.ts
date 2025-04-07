@@ -4,11 +4,7 @@ import { Habit } from "@/types/types"
 import { ErrorResponse, getApiRoute } from "."
 import { getSessionToken } from "./auth"
 import { CreateHabitDto, createHabitSchema } from "../validation/habit"
-
-type CreateDTO = {
-  name: string
-  description?: string
-}
+import { localizeDate } from "../utils"
 
 export async function getMyHabits() {
   const token = await getSessionToken()
@@ -140,4 +136,30 @@ export async function getHabitDetails(slug: string) {
 
   const { habit }: { habit: Habit } = resData;
   return habit
+}
+
+// Возвращает привычки, в которых сегодня пользователь не отмечался.
+export async function getHabitsWithoutTodayCheckin() {
+  const token = await getSessionToken()
+  const todayIso = localizeDate(new Date).toISOString()
+  const route = getApiRoute("/api/habits/unchecked/" + todayIso)
+
+  const response = await fetch(route, {
+    headers: {
+      "Cookie": `${token.name}=${token.value}`
+    },
+    next: {
+      tags: ["checkins"],
+    }
+  })
+
+  const resData = await response.json()
+  if (!response.ok) {
+    const err: ErrorResponse = resData;
+    const message = err.error ?? "Не удалось получить привычки."
+    throw new Error(message)
+  }
+
+  const { habits }: { habits: Habit[] } = resData;
+  return habits
 }
