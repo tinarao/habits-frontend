@@ -9,7 +9,7 @@ import AccountDropdown from "./_components/account-dropdown"
 
 export default async function AppLayout({ children }: React.PropsWithChildren) {
   const session = await tc(verify())
-  if (session.error) {
+  if (session.error || !session.data) {
     return redirect("/start")
   }
 

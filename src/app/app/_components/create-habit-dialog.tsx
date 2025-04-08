@@ -17,9 +17,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { tc } from '@/lib/tc';
 import { Switch } from '@/components/ui/switch';
+import { useUser } from '@/hooks/use-user';
 
 const CreateHabitDialog = ({ children }: PropsWithChildren) => {
   const router = useRouter();
+  const { user } = useUser()
   const [isLoading, startTransition] = useTransition();
   const [remind, setRemind] = useState(false)
   const [newHabitName, setNewHabitName] = useState('');
@@ -85,7 +87,7 @@ const CreateHabitDialog = ({ children }: PropsWithChildren) => {
           </div>
         </div>
         <div className='flex items-center gap-x-2'>
-          <Switch checked={remind} onCheckedChange={e => setRemind(e)} />
+          <Switch title={user && user.plan === "free" ? "Подпишитесь на продвинутый план, чтобы получать уведомления" : "Включите email-уведомления о привычке"} disabled={(user && user.plan === "free") ?? true} checked={remind} onCheckedChange={e => setRemind(e)} />
           <Label>Напоминать</Label>
         </div>
         <Button disabled={isLoading} onClick={handleAddHabit}>

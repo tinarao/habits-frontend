@@ -4,6 +4,10 @@ import { redirect } from "next/navigation"
 import { HabitCard } from "../_components/habit-card"
 import Breadcrumbs from "../_components/breadcrumbs"
 
+export const metadata = {
+  title: "Мои привычки"
+}
+
 export default async function HabitsPage() {
   const { data: habits, error } = await tc(getMyHabits())
   if (error) {
@@ -13,7 +17,7 @@ export default async function HabitsPage() {
   return (
     <div className="container mx-auto">
       <Breadcrumbs links={[{ label: "Привычки", url: "/app/habits" }]} />
-      <div className="w-fit mx-auto">
+      <div className="w-fit mx-auto space-y-2">
         {habits.map(h => (
           <HabitCard key={h.id} habit={h} />
         ))}

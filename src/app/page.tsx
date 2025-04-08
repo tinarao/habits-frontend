@@ -3,7 +3,6 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Привычкинг - Формирование полезных привычек',
   description:
     'Привычкинг поможет вам формировать полезные привычки, отслеживать прогресс и достигать своих целей. Бесплатный сервис для развития личной эффективности.',
   keywords:

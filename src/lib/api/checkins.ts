@@ -5,6 +5,8 @@ import { ErrorResponse, getApiRoute } from "."
 import { getSessionToken } from "./auth"
 import { revalidateTag } from "next/cache"
 
+const CHECKINS_TAG = "checkins"
+
 export async function createCheckin(habit: Habit) {
   const token = await getSessionToken()
   if (!token) {
@@ -19,7 +21,7 @@ export async function createCheckin(habit: Habit) {
     }
   })
 
-  revalidateTag("checkins")
+  revalidateTag(CHECKINS_TAG)
   const data = await response.json()
   if (!response.ok) {
     const err = data as ErrorResponse
@@ -33,6 +35,9 @@ export async function getCheckinsByHabit(habit: Habit) {
   const response = await fetch(route, {
     headers: {
       "Cookie": `${token.name}=${token.value}`
+    },
+    next: {
+      tags: [CHECKINS_TAG]
     }
   })
 
@@ -52,7 +57,11 @@ export async function getLatestCheckins() {
   const response = await fetch(route, {
     headers: {
       "Cookie": `${token.name}=${token.value}`
+    },
+    next: {
+      tags: [CHECKINS_TAG]
     }
+
   })
 
   const data = await response.json()
