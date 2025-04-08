@@ -17,15 +17,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import {
-  Bell,
-  BellRing,
   Cog,
   LoaderCircle,
   PenLine,
   Pin,
   Save,
   Star,
-  Trash,
+  Trash
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useMemo, useState, useTransition } from 'react';

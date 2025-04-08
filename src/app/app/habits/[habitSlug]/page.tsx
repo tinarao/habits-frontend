@@ -3,7 +3,7 @@ import { tc } from "@/lib/tc";
 import { redirect } from "next/navigation";
 import { HabitCard } from "../../_components/habit-card";
 import Breadcrumbs from "../../_components/breadcrumbs";
-import { ResolvingMetadata, Metadata } from "next";
+import { Metadata } from "next";
 
 type HPProps = {
   params: Promise<{
@@ -15,7 +15,6 @@ type HPProps = {
 // Next.js docs says that this thing is cached by default
 export async function generateMetadata(
   { params }: HPProps,
-  _parent: ResolvingMetadata
 ): Promise<Metadata> {
   const { habitSlug } = await params
 
