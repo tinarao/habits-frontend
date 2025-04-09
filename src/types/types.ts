@@ -8,7 +8,8 @@ export type Habit = {
   description: string | null;
   isPinned: boolean;
   checkIns: CheckIn[];
-  user: User;
+  user?: User;
+  checkinColor: string;
   userId: number;
   createdAt: Date;
   updatedAt: Date;
@@ -16,9 +17,9 @@ export type Habit = {
 
 export type CheckIn = {
   id: number;
-  habit: Habit;
+  habit?: Habit;
   habitId: number;
-  user: User;
+  user?: User;
   userId: number;
   createdAt: Date;
   updatedAt: Date;

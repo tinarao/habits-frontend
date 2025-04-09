@@ -98,6 +98,26 @@ export async function togglePin(habit: Habit) {
   }
 }
 
+export async function getRandomHabit() {
+  const token = await getSessionToken()
+  const route = getApiRoute("/api/habits/random")
+  const response = await fetch(route, {
+    headers: {
+      "Cookie": `${token.name}=${token.value}`
+    }
+  })
+
+  const resData = await response.json()
+  if (!response.ok) {
+    const err: ErrorResponse = resData
+    const message = err.error ?? "Не удалось получить случайную привычку."
+    throw new Error(message)
+  }
+
+  const { habit }: { habit: Habit } = resData
+  return habit
+}
+
 export async function getPinned() {
   const token = await getSessionToken()
   const route = getApiRoute("/api/habits/pin")

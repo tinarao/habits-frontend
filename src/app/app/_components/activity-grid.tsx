@@ -8,6 +8,7 @@ import { memo, useMemo } from "react"
 type CICProps = {
   date: Date
   isCheckedIn: boolean
+  color: string
 }
 
 type AGProps = {
@@ -16,13 +17,13 @@ type AGProps = {
 }
 
 const CheckInCell = memo(
-  function Cell({ date, isCheckedIn }: CICProps) {
+  function Cell({ date, isCheckedIn, color }: CICProps) {
     const title = Intl.DateTimeFormat('ru', {
       dateStyle: "long"
     }).format(date)
 
     return (
-      <div title={title} className={cn(
+      <div style={{ backgroundColor: isCheckedIn ? color : "#d6d3d1" }} title={title} className={cn(
         isCheckedIn ? "bg-green-500" : "bg-stone-300",
         'size-3 rounded-xs transition-transform hover:scale-125 cursor-pointer'
       )} />
@@ -47,7 +48,7 @@ export function ActivityGrid({ habit, checkedDates }: AGProps) {
         )
 
         return (
-          <CheckInCell key={day.date.toISOString()} date={day.date} isCheckedIn={isCheckedIn} />
+          <CheckInCell color={habit.checkinColor} key={day.date.toISOString()} date={day.date} isCheckedIn={isCheckedIn} />
         )
       })}
     </div>
