@@ -9,7 +9,7 @@ export type Habit = {
   isPinned: boolean;
   checkIns: CheckIn[];
   user?: User;
-  checkinColor: string;
+  checkinsColor: string;
   userId: number;
   createdAt: Date;
   updatedAt: Date;

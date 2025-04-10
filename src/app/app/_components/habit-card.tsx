@@ -41,10 +41,45 @@ import { Input } from '@/components/ui/input';
 import { Habit } from '@/types/types';
 import { ActivityGrid } from './activity-grid';
 import { tc } from '@/lib/tc';
-import { deleteHabit, renameHabit, togglePin } from '@/lib/api/habits';
+import { changeColor, deleteHabit, renameHabit, togglePin } from '@/lib/api/habits';
 import { CheckInButton } from './checkin-button';
 import { cn, localizeDate } from '@/lib/utils';
 import Link from 'next/link';
+
+const COLORS = [
+  {
+    label: "Розовый",
+    hex: "#ff2056"
+  },
+  {
+    label: "Красный",
+    hex: "#fb2c36"
+  },
+  {
+    label: "Фиолетовый",
+    hex: "#8e51ff"
+  },
+  {
+    label: "Оранжевый",
+    hex: "#ff6900"
+  },
+  {
+    label: "Жёлтый",
+    hex: "#f0b100"
+  },
+  {
+    label: "Зелёный",
+    hex: "#00c951"
+  },
+  {
+    label: "Синий",
+    hex: "#2b7fff"
+  },
+  {
+    label: "Фуксия",
+    hex: "#e12afb"
+  }
+]
 
 interface HabitCardProps {
   habit: Habit;
@@ -52,6 +87,7 @@ interface HabitCardProps {
 
 export function HabitCard({ habit }: HabitCardProps) {
   const router = useRouter();
+  const [color, setColor] = useState(habit.checkinsColor ?? "#00c951")
   const [newName, setNewName] = useState(habit.name);
   const [isLoading, startTransition] = useTransition();
 
@@ -64,15 +100,24 @@ export function HabitCard({ habit }: HabitCardProps) {
     [habit]
   );
 
-  const handleRenameHabit = async () => {
+  const handlePatchHabit = async () => {
     startTransition(async () => {
-      const result = await tc(renameHabit(habit, newName));
-      if (result.error) {
-        toast.error(result.error.message);
-        return;
+      console.log("Change color to ", color)
+
+      const changeColorPromise = tc(changeColor(habit, color))
+
+      const [renameResult, changeColorResult] = await Promise.all([
+        tc(renameHabit(habit, newName)),
+        changeColorPromise
+      ])
+
+      if (renameResult.error || changeColorResult.error) {
+        console.error("Failed to patch habits")
+        toast.error("Не удалось изменить привычку. Попробуйте снова.")
+        return
       }
 
-      toast.success('Привычка переименована!');
+      toast.success('Привычка успешно изменена!');
       router.refresh();
     });
   };
@@ -180,8 +225,29 @@ export function HabitCard({ habit }: HabitCardProps) {
                 maxLength={128}
               />
             </div>
+
+            {/* Colors */}
+            <div className='space-y-1'>
+              <div className='grid grid-cols-8 gap-x-1 h-fit'>
+                {COLORS.map((c, i) => (
+                  <div
+                    key={i}
+                    title={c.label}
+                    style={{ backgroundColor: c.hex }}
+                    onClick={() => {
+                      console.log(c.hex)
+                      setColor(c.hex)
+                    }}
+                    className={cn('rounded-2xl aspect-square hover:opacity-50 transition',
+                      color == c.hex ? "border-2 shadow-lg shadow-black/30 border-neutral-500" : ""
+                    )}
+                  />
+                ))}
+              </div>
+            </div>
+
             <DialogFooter>
-              <Button disabled={isLoading} onClick={handleRenameHabit}>
+              <Button disabled={isLoading} onClick={handlePatchHabit}>
                 {isLoading ? (
                   <>
                     <LoaderCircle className="animate-spin" />

@@ -5,6 +5,9 @@ import { ErrorResponse, getApiRoute } from "."
 import { getSessionToken } from "./auth"
 import { CreateHabitDto, createHabitSchema } from "../validation/habit"
 import { localizeDate } from "../utils"
+import { revalidateTag } from "next/cache"
+
+const HABITS_TAG = "habits"
 
 export async function getMyHabits() {
   const token = await getSessionToken()
@@ -12,6 +15,9 @@ export async function getMyHabits() {
   const response = await fetch(route, {
     headers: {
       "Cookie": `${token.name}=${token.value}`
+    },
+    next: {
+      tags: [HABITS_TAG]
     }
   })
 
@@ -156,6 +162,25 @@ export async function getHabitDetails(slug: string) {
 
   const { habit }: { habit: Habit } = resData;
   return habit
+}
+
+export async function changeColor(habit: Habit, newColor: string) {
+  const token = await getSessionToken()
+  const route = getApiRoute(`/api/habits/color/${habit.slug}/${newColor.slice(1)}`)
+  const response = await fetch(route, {
+    headers: {
+      "Cookie": `${token.name}=${token.value}`
+    },
+    method: "PATCH"
+  })
+
+  if (!response.ok) {
+    const err: ErrorResponse = await response.json()
+    const message = err.error ?? "Не удалось изменить цвет."
+    throw new Error(message)
+  }
+
+  revalidateTag(HABITS_TAG)
 }
 
 // Возвращает привычки, в которых сегодня пользователь не отмечался.

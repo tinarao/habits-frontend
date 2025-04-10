@@ -21,10 +21,9 @@ const CheckInCell = memo(
     const title = Intl.DateTimeFormat('ru', {
       dateStyle: "long"
     }).format(date)
-
+    const cellColor = isCheckedIn ? color : "#d6d3d1"
     return (
-      <div style={{ backgroundColor: isCheckedIn ? color : "#d6d3d1" }} title={title} className={cn(
-        isCheckedIn ? "bg-green-500" : "bg-stone-300",
+      <div style={{ backgroundColor: `${cellColor}` }} title={title} className={cn(
         'size-3 rounded-xs transition-transform hover:scale-125 cursor-pointer'
       )} />
     )
@@ -48,7 +47,7 @@ export function ActivityGrid({ habit, checkedDates }: AGProps) {
         )
 
         return (
-          <CheckInCell color={habit.checkinColor} key={day.date.toISOString()} date={day.date} isCheckedIn={isCheckedIn} />
+          <CheckInCell color={habit.checkinsColor} key={day.date.toISOString()} date={day.date} isCheckedIn={isCheckedIn} />
         )
       })}
     </div>

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Cog, Palette } from "lucide-react"
+import { Cog } from "lucide-react"
 import Link from "next/link"
 
 const links = [
@@ -7,11 +7,6 @@ const links = [
     url: "/app/settings",
     label: "Основные",
     icon: Cog
-  },
-  {
-    url: "/app/settings/customization",
-    label: "Кастомизация",
-    icon: Palette
   }
 ]
 
