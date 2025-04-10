@@ -45,41 +45,7 @@ import { changeColor, deleteHabit, renameHabit, togglePin } from '@/lib/api/habi
 import { CheckInButton } from './checkin-button';
 import { cn, localizeDate } from '@/lib/utils';
 import Link from 'next/link';
-
-const COLORS = [
-  {
-    label: "Розовый",
-    hex: "#ff2056"
-  },
-  {
-    label: "Красный",
-    hex: "#fb2c36"
-  },
-  {
-    label: "Фиолетовый",
-    hex: "#8e51ff"
-  },
-  {
-    label: "Оранжевый",
-    hex: "#ff6900"
-  },
-  {
-    label: "Жёлтый",
-    hex: "#f0b100"
-  },
-  {
-    label: "Зелёный",
-    hex: "#00c951"
-  },
-  {
-    label: "Синий",
-    hex: "#2b7fff"
-  },
-  {
-    label: "Фуксия",
-    hex: "#e12afb"
-  }
-]
+import ColorSelector from './color-selector';
 
 interface HabitCardProps {
   habit: Habit;
@@ -87,7 +53,6 @@ interface HabitCardProps {
 
 export function HabitCard({ habit }: HabitCardProps) {
   const router = useRouter();
-  const [color, setColor] = useState(habit.checkinsColor ?? "#00c951")
   const [newName, setNewName] = useState(habit.name);
   const [isLoading, startTransition] = useTransition();
 
@@ -102,17 +67,23 @@ export function HabitCard({ habit }: HabitCardProps) {
 
   const handlePatchHabit = async () => {
     startTransition(async () => {
-      console.log("Change color to ", color)
+      const renameResult = await tc(renameHabit(habit, newName))
 
-      const changeColorPromise = tc(changeColor(habit, color))
+      if (renameResult.error) {
+        toast.error("Не удалось изменить привычку. Попробуйте снова.")
+        return
+      }
 
-      const [renameResult, changeColorResult] = await Promise.all([
-        tc(renameHabit(habit, newName)),
-        changeColorPromise
-      ])
+      toast.success('Привычка успешно изменена!');
+      router.refresh();
+    });
+  };
 
-      if (renameResult.error || changeColorResult.error) {
-        console.error("Failed to patch habits")
+  const handleChangeColor = async (hex: string) => {
+    startTransition(async () => {
+      const renameResult = await tc(changeColor(habit, hex))
+
+      if (renameResult.error) {
         toast.error("Не удалось изменить привычку. Попробуйте снова.")
         return
       }
@@ -228,22 +199,7 @@ export function HabitCard({ habit }: HabitCardProps) {
 
             {/* Colors */}
             <div className='space-y-1'>
-              <div className='grid grid-cols-8 gap-x-1 h-fit'>
-                {COLORS.map((c, i) => (
-                  <div
-                    key={i}
-                    title={c.label}
-                    style={{ backgroundColor: c.hex }}
-                    onClick={() => {
-                      console.log(c.hex)
-                      setColor(c.hex)
-                    }}
-                    className={cn('rounded-2xl aspect-square hover:opacity-50 transition',
-                      color == c.hex ? "border-2 shadow-lg shadow-black/30 border-neutral-500" : ""
-                    )}
-                  />
-                ))}
-              </div>
+              <ColorSelector initialColor={habit.checkinsColor} onChange={handleChangeColor} />
             </div>
 
             <DialogFooter>
